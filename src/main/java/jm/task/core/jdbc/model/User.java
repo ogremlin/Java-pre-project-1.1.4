@@ -28,6 +28,11 @@ public class User {
         this.age = age;
     }
 
+    @Override
+    public String toString() {
+        return String.format("| Имя: %s | Фамилия: %s | Возраст: %d |", name, lastName, age);
+    }
+
     public Long getId() {
         return id;
     }
