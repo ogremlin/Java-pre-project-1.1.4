@@ -17,7 +17,6 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-
             String SQL = "CREATE TABLE IF NOT EXISTS USER "
                     + "(id INTEGER PRIMARY KEY AUTO_INCREMENT, "
                     + "name VARCHAR(50), "
@@ -65,15 +64,11 @@ public class UserDaoJDBCImpl implements UserDao {
             String SQL = "SELECT * FROM USER";
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
-//                user.setId(resultSet.getLong("id"));
-//                user.setName(resultSet.getString("name"));
-//                user.setLastName(resultSet.getString("lastName"));
-//                user.setAge(resultSet.getByte("age"));
                 userList.add(new User(resultSet.getString("name"),
                         resultSet.getString("lastName"),
                         resultSet.getByte("age")));
             }
-//            userList.stream().forEach(System.out::println);
+            userList.stream().forEach(System.out::println);
         } catch (Exception e) {
             e.printStackTrace();
         }
