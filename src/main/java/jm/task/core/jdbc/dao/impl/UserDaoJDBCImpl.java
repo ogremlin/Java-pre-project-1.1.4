@@ -1,7 +1,9 @@
-package jm.task.core.jdbc.dao;
+package jm.task.core.jdbc.dao.impl;
 
+import jm.task.core.jdbc.dao.UserDao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
+import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,18 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@NoArgsConstructor
 public class UserDaoJDBCImpl implements UserDao {
-
-    public UserDaoJDBCImpl() {
-    }
 
     public void createUsersTable() {
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-            String SQL = "CREATE TABLE IF NOT EXISTS USER "
-                    + "(id INTEGER PRIMARY KEY AUTO_INCREMENT, "
-                    + "name VARCHAR(50), "
-                    + "lastName VARCHAR (50), "
-                    + "age SMALLINT)";
+            String SQL = new StringBuilder()
+                    .append("CREATE TABLE IF NOT EXISTS USERS ")
+                    .append("(id INTEGER PRIMARY KEY AUTO_INCREMENT, ")
+                    .append("name VARCHAR(50), ")
+                    .append("lastName VARCHAR (50), ")
+                    .append("age SMALLINT)").toString();
             statement.executeUpdate(SQL);
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,7 +31,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-            String SQL = "DROP TABLE IF EXISTS USER";
+            String SQL = "DROP TABLE IF EXISTS USERS";
             statement.executeUpdate(SQL);
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,7 +40,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) {
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-            String SQL = String.format("INSERT INTO USER(name, lastName, age) VALUES ('%s', '%s', %d)", name, lastName, age);
+            String SQL = new StringBuilder()
+                    .append("INSERT INTO USERS(name, lastName, age) VALUES ('").append(name)
+                    .append("', '").append(lastName)
+                    .append("', ").append(age)
+                    .append(")").toString();
             statement.executeUpdate(SQL);
             System.out.println(String.format("User c именем - %s добавлен в базу данных", name));
         } catch (Exception e) {
@@ -49,7 +54,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void removeUserById(long id) {
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-            String SQL = "DELETE FROM USER WHERE id = " + id;
+            String SQL = "DELETE FROM USERS WHERE id = " + id;
             statement.executeUpdate(SQL);
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,7 +66,7 @@ public class UserDaoJDBCImpl implements UserDao {
         User user = new User();
 
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-            String SQL = "SELECT * FROM USER";
+            String SQL = "SELECT * FROM USERS";
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
                 userList.add(new User(resultSet.getString("name"),
@@ -77,7 +82,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         try (Connection connection = Util.getMySQLConnection(); Statement statement = connection.createStatement()) {
-            String SQL = "DELETE FROM USER";
+            String SQL = "DELETE FROM USERS";
             statement.executeUpdate(SQL);
         } catch (Exception e) {
             e.printStackTrace();
